@@ -1,38 +1,47 @@
-# farmcoolcow/entrypoints
+# martinussuherman/alpine-tz-ep
 
-[![](https://img.shields.io/badge/  FROM  -  alpine  -lightgray.svg)](https://hub.docker.com/_/alpine) [![](https://images.microbadger.com/badges/commit/farmcoolcow/entrypoints.svg)](https://github.com/coolcow/docker_entrypoints/commits/master) [![](https://images.microbadger.com/badges/image/farmcoolcow/entrypoints.svg)](https://microbadger.com/images/farmcoolcow/entrypoints) [![](https://images.microbadger.com/badges/license/farmcoolcow/entrypoints.svg)](https://raw.githubusercontent.com/coolcow/docker_entrypoints/master/LICENSE.txt)
+[![](https://img.shields.io/badge/%20%20FROM%20%20-%20%20alpine%20%20-lightgray.svg)](https://hub.docker.com/_/alpine)  [![](https://images.microbadger.com/badges/image/martinussuherman/alpine-tz-ep.svg)](https://microbadger.com/images/martinussuherman/alpine-tz-ep "Get your own image badge on microbadger.com")  [![](https://images.microbadger.com/badges/commit/martinussuherman/alpine-tz-ep.svg)](https://microbadger.com/images/martinussuherman/alpine-tz-ep "Get your own commit badge on microbadger.com")  [![](https://images.microbadger.com/badges/license/martinussuherman/alpine-tz-ep.svg)](https://microbadger.com/images/martinussuherman/alpine-tz-ep "Get your own license badge on microbadger.com")  [![](https://images.microbadger.com/badges/version/martinussuherman/alpine-tz-ep.svg)](https://microbadger.com/images/martinussuherman/alpine-tz-ep "Get your own version badge on microbadger.com")
 
 ---
 
 ## What is this image for ?
 
-This is a base image based on [alpine](https://hub.docker.com/_/alpine/) that bundles some useful entrypoint scripts.
+This is an [Alpine Linux](https://hub.docker.com/_/alpine/) based image that bundles **tzdata**, **su-exec**, and some useful entrypoint scripts.
 
 --- 
 
-* [/create_user_group_home.sh](https://github.com/coolcow/docker_entrypoints/blob/master/create_user_group_home.sh) [user] [group] [home]  
+* [/create_user_group_home.sh](https://github.com/martinussuherman/alpine-tz-ep/blob/master/create_user_group_home.sh)
 
-  Creates an **user** a **group** and a **home** directory.  
-  The group and the home directory are assigned to the user, as well as ```/bin/sh``` as the default **shell**.  
-  If the environment variable ```PUID``` is set, the user is created with this id. Otherwise the user id is set to ```1000```.  
-  If the environment variable ```PGID``` is set, the group is created with this id. Otherwise the group id is set to ```1000```.  
+  Creates **user** with **userid**, **group**, **groupid** and **home** directory.
+  The group and the home directory are assigned to the user, with ```/sbin/nologin``` as the default **shell**.
+  
+  User created from environment variable ```EUSER``` (default ```docker-user```), with uid from environment variable ```EUID``` (default ```1001```).
+  
+  Group created from environment variable ```EGROUP``` (default ```docker-group```), with gid from environment variable ```EGID``` (default ```1001```).
+  
+  Home directory created from environment variable ```EHOME``` (default ```/home/docker-user```).
   
 ---
 
-* [/entrypoint_su-exec.sh](https://github.com/coolcow/docker_entrypoints/blob/master/entrypoint_su-exec.sh) [command] [params...]  
+* [/entrypoint_su-exec.sh](https://github.com/martinussuherman/alpine-tz-ep/blob/master/entrypoint_su-exec.sh) [command] [params...]  
 
-  First creates an user, group and home directory, by executing **```/create_user_group_home.sh```** with the parameters ```$ENTRYPOINT_USER``` ```$ENTRYPOINT_GROUP``` ```$ENTRYPOINT_HOME```.  
-  Then uses **```su-exec```** to exec ```$ENTRYPOINT_COMMAND``` with the given parameters as the user ```$ENTRYPOINT_USER```.
+  First creates user, group and home directory, by executing **```/create_user_group_home.sh```**.
+  Then uses **```su-exec```** to exec ```$ENTRYPOINT_COMMAND``` with the given parameters as the user ```$EUSER```.
   > see [farmcoolcow/rclone](https://hub.docker.com/r/farmcoolcow/rclone) to see this entryoint in action.
   
 ---
 
-* [/entrypoint_crond.sh](https://github.com/coolcow/docker_entrypoints/blob/master/entrypoint_crond.sh) [params...]  
+* [/entrypoint_crond.sh](https://github.com/martinussuherman/alpine-tz-ep/blob/master/entrypoint_crond.sh) [params...]  
 
-  First creates an user, group and home directory, by executing **```/create_user_group_home.sh```** with the parameters ```$ENTRYPOINT_USER``` ```$ENTRYPOINT_GROUP``` ```$ENTRYPOINT_HOME```.   
-  Then sets the crontab file ```$CROND_CRONTAB``` as the crontab of the user ```$ENTRYPOINT_USER```.   
+  First creates user, group and home directory, by executing **```/create_user_group_home.sh```**.   
+  Then sets the crontab file ```$CROND_CRONTAB``` as the crontab of the user ```$EUSER```.   
   Finally executes **```crond```** with the given parameters.
   > see [farmcoolcow/rclone-cron](https://hub.docker.com/r/farmcoolcow/rclone-cron) to see this entryoint in action.
+ 
+---
+
+* [/entrypoint_exec.sh](https://github.com/martinussuherman/alpine-tz-ep/blob/master/entrypoint_exec.sh) [command] [params...]  
+
+  First creates user, group and home directory, by executing **```/create_user_group_home.sh```**.
+  Then uses **```exec```** to exec ```$ENTRYPOINT_COMMAND``` with the given parameters (as ```root```).
   
-
-
