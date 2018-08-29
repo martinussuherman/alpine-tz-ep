@@ -7,15 +7,9 @@ if [ -z $CROND_CRONTAB ]; then
 fi
 
 # create user group and home
-/create_user_group_home.sh \
-  $ENTRYPOINT_USER \
-  $ENTRYPOINT_GROUP \
-  $ENTRYPOINT_HOME
+/create_user_group_home.sh
 
 # configure and exec cron deamon
-crontab \
-  -u $ENTRYPOINT_USER \
-  $CROND_CRONTAB
+crontab -u $EUSER $CROND_CRONTAB
 
-crond \
-  $CROND_PARAMS
+crond $CROND_PARAMS
