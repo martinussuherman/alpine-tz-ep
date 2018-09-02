@@ -1,6 +1,6 @@
 #!/bin/sh
-# The goal of this script is to allow mapping of host user (the one running 
-# docker), to the desired container user, as to enable the use of more 
+# The goal of this script is to allow mapping of host user (the one running
+# docker), to the desired container user, as to enable the use of more
 # restrictive file permission (700 or 600)
 
 # does a group with name = EGROUP already exist ?
@@ -24,7 +24,7 @@ else
   # create new user with id = EUID, group = EGROUP and home directory = EHOME,
   # with nologin shell
   adduser -s /sbin/nologin -u $EUID -G $EGROUP -h $EHOME -D $EUSER
-fi  
+fi
 
 # change ownership of home directory
 chown $EUSER:$EGROUP $EHOME
