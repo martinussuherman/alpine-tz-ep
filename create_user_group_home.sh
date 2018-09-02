@@ -1,26 +1,30 @@
 #!/bin/sh
+# The goal of this script is to allow mapping of host user (the one running 
+# docker), to the desired container user, as to enable the use of more 
+# restrictive file permission (700 or 600)
 
-# does a group with id = EGID already exist ?
-EXISTING_GROUP=$(getent group $EGID | cut -f1 -d ':')
+# does a group with name = EGROUP already exist ?
+EXISTING_GID = $( getent group $EGROUP | cut -f3 -d ':' )
 
-if [ ! -z $EXISTING_GROUP ]; then
-  # change name of the existing group
-  groupmod -n $EGROUP $EXISTING_GROUP
+if [ ! -z $EXISTING_GID && $EXISTING_GID != $EGID ]; then
+  # change id of the existing group
+  groupmod -g $EGID $EGROUP
 else
   # create new group with id = EGID
   addgroup -g $EGID $EGROUP
 fi
 
-# does a user with id = EUID already exist ?
-EXISTING_USER=$(getent passwd $EUID | cut -f1 -d ':')
+# does a user with name = EUSER already exist ?
+EXISTING_UID = $( getent passwd $EUSER | cut -f3 -d ':' )
 
-if [ ! -z $EXISTING__USER ]; then
+if [ ! -z $EXISTING_UID && $EXISTING_UID != $EUID ]; then
   # change login, home, shell (nologin) and primary group of the existing user
-  usermod -l $EUSER -d $EHOME -s /sbin/nologin -g $EGID $EXISTING_USER
+  usermod -u $EUID -d $EHOME -s /sbin/nologin -g $EGROUP $EUSER
 else
-  # create new user with id = EUID, group = EGROUP and home directory = EHOME, with nologin shell
+  # create new user with id = EUID, group = EGROUP and home directory = EHOME,
+  # with nologin shell
   adduser -s /sbin/nologin -u $EUID -G $EGROUP -h $EHOME -D $EUSER
 fi  
 
-# create user, group, and home
+# change ownership of home directory
 chown $EUSER:$EGROUP $EHOME
