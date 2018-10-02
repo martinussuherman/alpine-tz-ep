@@ -7,5 +7,8 @@ ENTRYPOINT_PARAMS=$@
 # create user group and home
 /create_user_group_home.sh
 
+# chown other paths
+/chown_paths.sh
+
 # exec ENTRYPOINT_COMMAND as user
 su-exec $EUSER $ENTRYPOINT_COMMAND $ENTRYPOINT_PARAMS

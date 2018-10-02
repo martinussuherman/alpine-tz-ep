@@ -9,6 +9,9 @@ fi
 # create user group and home
 /create_user_group_home.sh
 
+# chown other paths
+/chown_paths.sh
+
 # configure and exec cron deamon
 crontab -u $EUSER $CROND_CRONTAB
 

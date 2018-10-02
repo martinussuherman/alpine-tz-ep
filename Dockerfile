@@ -17,6 +17,10 @@ ENV LABEL_MAINTAINER="Martinus Suherman" \
     EGROUP=docker-group \
     # container user home dir \
     EHOME=/home/docker-user \
+    # additional directories to create + chown (space separated) \
+    ECHOWNDIRS= \
+    # additional files to create + chown (space separated) \
+    ECHOWNFILES= \
     # container timezone \
     TZ=UTC 
 
@@ -27,6 +31,7 @@ RUN apk --no-cache --update add \
     tzdata
 
 COPY create_user_group_home.sh \
+     chown_paths.sh \
      entrypoint_su-exec.sh \
      entrypoint_crond.sh \
      entrypoint_exec.sh \
@@ -34,6 +39,7 @@ COPY create_user_group_home.sh \
 
 RUN chmod +x \
     /create_user_group_home.sh \
+    /chown_paths.sh \
     /entrypoint_su-exec.sh \
     /entrypoint_crond.sh \
     /entrypoint_exec.sh
