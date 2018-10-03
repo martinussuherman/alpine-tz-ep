@@ -21,8 +21,13 @@ EXISTING_UID=$( getent passwd $EUSER | cut -f3 -d ':' )
 
 if [ ! -z $EXISTING_UID ]; then
    if [ $EXISTING_UID != $EUID ]; then
-      # change login, home, shell (nologin) and primary group of the existing user
-      usermod -u $EUID -d $EHOME -s /sbin/nologin -g $EGROUP $EUSER
+      if [ ! -z $EHOME ]; then
+         # change login, home, shell (nologin) and primary group of the existing user
+         usermod -u $EUID -d $EHOME -s /sbin/nologin -g $EGROUP $EUSER
+      else
+         # change login, shell (nologin) and primary group of the existing user
+         usermod -u $EUID -s /sbin/nologin -g $EGROUP $EUSER
+      fi
    fi
 else
    if [ ! -z $EHOME ]; then
