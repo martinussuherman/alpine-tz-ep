@@ -16,7 +16,7 @@ ENV LABEL_MAINTAINER="Martinus Suherman" \
     # container/su-exec group name \
     EGROUP=docker-group \
     # container user home dir \
-    EHOME=/home/docker-user \
+    EHOME= \
     # additional directories to create + chown (space separated) \
     ECHOWNDIRS= \
     # additional files to create + chown (space separated) \

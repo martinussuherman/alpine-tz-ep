@@ -25,10 +25,17 @@ if [ ! -z $EXISTING_UID ]; then
       usermod -u $EUID -d $EHOME -s /sbin/nologin -g $EGROUP $EUSER
    fi
 else
-   # create new user with id = EUID, group = EGROUP and home directory = EHOME,
-   # with nologin shell
-   adduser -s /sbin/nologin -u $EUID -G $EGROUP -h $EHOME -D $EUSER
+   if [ ! -z $EHOME ]; then
+      # create new user with id = EUID, group = EGROUP and home directory = EHOME,
+      # with nologin shell
+      adduser -s /sbin/nologin -u $EUID -G $EGROUP -h $EHOME -D $EUSER
+   else
+      # create new user with id = EUID and group = EGROUP, with nologin shell
+      adduser -s /sbin/nologin -u $EUID -G $EGROUP -D $EUSER
+   fi
 fi
 
-# change ownership of home directory
-chown $EUSER:$EGROUP $EHOME
+if [ ! -z $EHOME ]; then
+   # change ownership of home directory
+   chown $EUSER:$EGROUP $EHOME
+fi
