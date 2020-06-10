@@ -1,4 +1,4 @@
-# martinussuherman/alpine-tz-ep:glibc
+# martinussuherman/alpine-tz-ep
 
 [![](https://img.shields.io/badge/%20%20FROM%20%20-%20%20alpine%20%20-lightgray.svg)](https://hub.docker.com/_/alpine)  [![](https://images.microbadger.com/badges/image/martinussuherman/alpine-tz-ep.svg)](https://microbadger.com/images/martinussuherman/alpine-tz-ep "Get your own image badge on microbadger.com")  [![](https://images.microbadger.com/badges/commit/martinussuherman/alpine-tz-ep.svg)](https://microbadger.com/images/martinussuherman/alpine-tz-ep "Get your own commit badge on microbadger.com")  [![](https://images.microbadger.com/badges/license/martinussuherman/alpine-tz-ep.svg)](https://microbadger.com/images/martinussuherman/alpine-tz-ep "Get your own license badge on microbadger.com")  [![](https://images.microbadger.com/badges/version/martinussuherman/alpine-tz-ep.svg)](https://microbadger.com/images/martinussuherman/alpine-tz-ep "Get your own version badge on microbadger.com")
 
@@ -6,7 +6,7 @@
 
 ## What is this image for ?
 
-This is an [Minimal Alpine Linux image with glibc](https://hub.docker.com/r/jeanblanchard/alpine-glibc) based image that bundles **tzdata**, **su-exec**, and some useful entrypoint scripts.
+This is an [Alpine Linux](https://hub.docker.com/_/alpine/) or [Minimal Alpine Linux image with glibc](https://hub.docker.com/r/jeanblanchard/alpine-glibc) based image that bundles **tzdata**, **su-exec**, and some useful entrypoint scripts.
 
 --- 
 
@@ -20,7 +20,16 @@ This is an [Minimal Alpine Linux image with glibc](https://hub.docker.com/r/jean
   Group created from environment variable ```EGROUP``` (default ```docker-group```), with gid from environment variable ```EGID``` (default ```1001```).
   
   Home directory created from environment variable ```EHOME``` (default ```/home/docker-user```).
-  
+
+  If variable ```ECHOWNHOME``` equals yes then the home directory will be chown'ed to ```EUSER```:```EGROUP```
+
+---
+
+* [/chown_paths.sh](https://github.com/martinussuherman/alpine-tz-ep/blob/master/chown_paths.sh)
+
+  Chown directories in ```ECHOWNDIRS```, create them if not exist.
+  Chown files in ```ECHOWNFILES```, create them if not exist.
+
 ---
 
 * [/entrypoint_su-exec.sh](https://github.com/martinussuherman/alpine-tz-ep/blob/master/entrypoint_su-exec.sh) [command] [params...]  
