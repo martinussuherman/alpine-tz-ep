@@ -41,6 +41,8 @@ else
 fi
 
 if [ ! -z $EHOME ]; then
-   # change ownership of home directory
-   chown $EUSER:$EGROUP $EHOME
+   if [ $ECHOWNHOME = "yes" ]; then 
+      # change ownership of home directory
+      chown $EUSER:$EGROUP $EHOME
+   fi
 fi

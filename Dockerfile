@@ -17,6 +17,8 @@ ENV LABEL_MAINTAINER="Martinus Suherman" \
     EGROUP=docker-group \
     # container user home dir \
     EHOME= \
+    # should user home dir get chown'ed? (yes/no) \
+    ECHOWNHOME=no \
     # additional directories to create + chown (space separated) \
     ECHOWNDIRS= \
     # additional files to create + chown (space separated) \
