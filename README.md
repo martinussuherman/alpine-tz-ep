@@ -1,4 +1,4 @@
-# martinussuherman/alpine-tz-ep
+# martinussuherman/alpine-tz-ep:glibc
 
 [![](https://img.shields.io/badge/%20%20FROM%20%20-%20%20alpine%20%20-lightgray.svg)](https://hub.docker.com/_/alpine)  [![](https://images.microbadger.com/badges/image/martinussuherman/alpine-tz-ep.svg)](https://microbadger.com/images/martinussuherman/alpine-tz-ep "Get your own image badge on microbadger.com")  [![](https://images.microbadger.com/badges/commit/martinussuherman/alpine-tz-ep.svg)](https://microbadger.com/images/martinussuherman/alpine-tz-ep "Get your own commit badge on microbadger.com")  [![](https://images.microbadger.com/badges/license/martinussuherman/alpine-tz-ep.svg)](https://microbadger.com/images/martinussuherman/alpine-tz-ep "Get your own license badge on microbadger.com")  [![](https://images.microbadger.com/badges/version/martinussuherman/alpine-tz-ep.svg)](https://microbadger.com/images/martinussuherman/alpine-tz-ep "Get your own version badge on microbadger.com")
 
@@ -6,7 +6,7 @@
 
 ## What is this image for ?
 
-This is an [Alpine Linux](https://hub.docker.com/_/alpine/) based image that bundles **tzdata**, **su-exec**, and some useful entrypoint scripts.
+This is an [Minimal Alpine Linux image with glibc](https://hub.docker.com/r/jeanblanchard/alpine-glibc) based image that bundles **tzdata**, **su-exec**, and some useful entrypoint scripts.
 
 --- 
 
@@ -27,7 +27,7 @@ This is an [Alpine Linux](https://hub.docker.com/_/alpine/) based image that bun
 
   First creates user, group and home directory, by executing **```/create_user_group_home.sh```**.
   Then uses **```su-exec```** to exec ```$ENTRYPOINT_COMMAND``` with the given parameters as the user ```$EUSER```.
-  > see [farmcoolcow/rclone](https://hub.docker.com/r/farmcoolcow/rclone) to see this entryoint in action.
+  > see [martinussuherman/alpine-tz-ep-code-server](https://hub.docker.com/r/martinussuherman/alpine-tz-ep-code-server) to see this entryoint in action.
   
 ---
 

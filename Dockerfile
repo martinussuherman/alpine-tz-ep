@@ -1,11 +1,11 @@
-FROM alpine
+FROM jeanblanchard/alpine-glibc
 
 ENV LABEL_MAINTAINER="Martinus Suherman" \
     LABEL_VENDOR="martinussuherman" \
     LABEL_IMAGE_NAME="martinussuherman/alpine-tz-ep" \
     LABEL_URL="https://hub.docker.com/r/martinussuherman/alpine-tz-ep/" \
     LABEL_VCS_URL="https://github.com/martinussuherman/alpine-tz-ep" \
-    LABEL_DESCRIPTION="Alpine Linux based image that bundles tzdata, su-exec, and some useful entrypoint scripts." \
+    LABEL_DESCRIPTION="Minimal Alpine Linux image with glibc that bundles tzdata, su-exec, and some useful entrypoint scripts." \
     LABEL_LICENSE="GPL-3.0" \
     # container/su-exec UID \
     EUID=1001 \
