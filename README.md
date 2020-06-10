@@ -6,7 +6,7 @@
 
 ## What is this image for ?
 
-This is an [Alpine Linux](https://hub.docker.com/_/alpine/) based image that bundles **tzdata**, **su-exec**, and some useful entrypoint scripts.
+This is an [Alpine Linux](https://hub.docker.com/_/alpine/) or [Minimal Alpine Linux image with glibc](https://hub.docker.com/r/jeanblanchard/alpine-glibc) based image that bundles **tzdata**, **su-exec**, and some useful entrypoint scripts.
 
 --- 
 
@@ -20,14 +20,23 @@ This is an [Alpine Linux](https://hub.docker.com/_/alpine/) based image that bun
   Group created from environment variable ```EGROUP``` (default ```docker-group```), with gid from environment variable ```EGID``` (default ```1001```).
   
   Home directory created from environment variable ```EHOME``` (default ```/home/docker-user```).
-  
+
+  If variable ```ECHOWNHOME``` equals yes then the home directory will be chown'ed to ```EUSER```:```EGROUP```
+
+---
+
+* [/chown_paths.sh](https://github.com/martinussuherman/alpine-tz-ep/blob/master/chown_paths.sh)
+
+  Chown directories in ```ECHOWNDIRS```, create them if not exist.
+  Chown files in ```ECHOWNFILES```, create them if not exist.
+
 ---
 
 * [/entrypoint_su-exec.sh](https://github.com/martinussuherman/alpine-tz-ep/blob/master/entrypoint_su-exec.sh) [command] [params...]  
 
   First creates user, group and home directory, by executing **```/create_user_group_home.sh```**.
   Then uses **```su-exec```** to exec ```$ENTRYPOINT_COMMAND``` with the given parameters as the user ```$EUSER```.
-  > see [farmcoolcow/rclone](https://hub.docker.com/r/farmcoolcow/rclone) to see this entryoint in action.
+  > see [martinussuherman/alpine-tz-ep-code-server](https://hub.docker.com/r/martinussuherman/alpine-tz-ep-code-server) to see this entryoint in action.
   
 ---
 
