@@ -24,7 +24,7 @@ jobs:
       - name: Build image
         run: |
           docker build . \
-            --t ${{ github.repository }} \
+            --tag ${{ github.repository }} \
             --build-arg LABEL_BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"` \
             --build-arg LABEL_VCS_REF=`git rev-parse --short ${{ github.sha }}`
 
