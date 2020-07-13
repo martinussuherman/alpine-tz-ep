@@ -71,8 +71,8 @@ jobs:
           --build-arg LABEL_URL=${{ env.IMAGE_URL }} \
           --build-arg LABEL_VCS_REF=`git rev-parse --short ${{ github.sha }}` \
           --build-arg LABEL_VCS_URL=`git config --get remote.origin.url` \
-          --build-arg LABEL_VENDOR=$({{ github.repository_owner }}) \
-          --build-arg LABEL_VERSION=$({{ env.IMAGE_VERSION }}) 
+          --build-arg LABEL_VENDOR=${{ github.repository_owner }} \
+          --build-arg LABEL_VERSION=${{ env.IMAGE_VERSION }} 
 
     - name: Log into registry
       run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
