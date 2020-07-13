@@ -68,7 +68,7 @@ jobs:
           --build-arg LABEL_DESCRIPTION=$DESCRIPTION \
           --build-arg LABEL_LICENSE=$LICENSE \
           --build-arg LABEL_NAME=${{ github.repository }} \
-          --build-arg LABEL_URL=${{ env.IMAGE_URL }}
+          --build-arg LABEL_URL=${{ env.IMAGE_URL }} \
           --build-arg LABEL_VCS_REF=`git rev-parse --short ${{ github.sha }}` \
           --build-arg LABEL_VCS_URL=`git config --get remote.origin.url` \
           --build-arg LABEL_VENDOR=$({{ github.repository_owner }}) \
