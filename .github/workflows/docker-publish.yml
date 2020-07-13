@@ -3,16 +3,15 @@ name: Docker
 on:
   push:
     branches:
-      - master
-      - glibc
+    - master
+    - glibc
 
   release:
     types: 
-      - published
-      - edited
+    - published
+    - edited
 
 env:
-  # TODO: Change variable to your image's name.
   IMAGE_NAME: alpine-tz-ep
 
 jobs:
@@ -23,36 +22,65 @@ jobs:
     if: github.event_name == 'push'
 
     steps:
-      - uses: actions/checkout@v2
+    - uses: actions/checkout@v2
 
-      - name: Build image
-        run: |
-          docker build . \
-            --tag $IMAGE_NAME \
-            --build-arg LABEL_BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"` \
-            --build-arg LABEL_VCS_REF=`git rev-parse --short ${{ github.sha }}`
-
-      - name: Log into registry
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
-
-      - name: Push image
-        run: |
-          IMAGE_ID=docker.pkg.github.com/${{ github.repository }}/$IMAGE_NAME
+    - name: Prepare metadata info
+      run: |
+        IMG_NAME=${{ github.repository }}
+        IMG_NAME=$(echo $IMG_NAME | sed -e 's!${{ github.repository_owner }}/!!')
+        
+        IMG_ID=docker.pkg.github.com/${{ github.repository }}/$IMG_NAME
           
-          # Change all uppercase to lowercase
-          IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
+        # Change all uppercase to lowercase
+        IMG_ID=$(echo $IMG_ID | tr '[A-Z]' '[a-z]')
 
-          # Strip git ref prefix from version
-          VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+        IMG_URL=https://$IMG_ID
 
-          # Strip "v" prefix from tag name
-          [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
+        # Strip git ref prefix from version
+        IMG_VER=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
 
-          # Use Docker `latest` tag convention
-          [ "$VERSION" == "master" ] && VERSION=latest
+        # Strip "v" prefix from tag name
+        [[ "${{ github.ref }}" == "refs/tags/"* ]] && IMG_VER=$(echo $IMG_VER | sed -e 's/^v//')
 
-          echo IMAGE_ID=$IMAGE_ID
-          echo VERSION=$VERSION
+        # Use Docker `latest` tag convention
+        [ "$IMG_VER" == "master" ] && IMG_VER=latest
 
-          docker tag $IMAGE_NAME $IMAGE_ID:$VERSION
-          docker push $IMAGE_ID:$VERSION
+        echo "::set-env name=IMAGE_ID::$IMG_ID"
+        echo "::set-env name=IMAGE_VERSION::$IMG_VER"
+        echo "::set-env name=IMAGE_URL::$IMG_URL"
+        echo "::set-env name=IMAGE_NAME::$IMG_NAME"
+
+    - name: Build image
+      run: |
+        MAINTAINER=$(curl -s https://api.github.com/users/${{github.repository_owner}} | grep '"name"' )
+        MAINTAINER=$(echo $MAINTAINER | sed -e 's!  "name": !!; s!"!!g; s!,!!g;')
+
+        DESCRIPTION=$(curl -s https://api.github.com/repos/${{github.repository}} | grep '"description"' -m 1 )
+        DESCRIPTION=$(echo $DESCRIPTION | sed -e 's!  "description": !!; s!"!!g; s!,!!g;')
+
+        LICENSE=$(curl -s https://api.github.com/repos/${{github.repository}} | grep '"spdx_id"' -m 1 )
+        LICENSE=$(echo $LICENSE | sed -e 's!    "spdx_id": !!; s!"!!g; s!,!!g;')
+
+        docker build . \
+          --tag $IMAGE_NAME \
+          --build-arg LABEL_MAINTAINER=$MAINTAINER \
+          --build-arg LABEL_BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"` \
+          --build-arg LABEL_DESCRIPTION=$DESCRIPTION \
+          --build-arg LABEL_LICENSE=$LICENSE \
+          --build-arg LABEL_NAME=${{ github.repository }} \
+          --build-arg LABEL_URL=${{ env.IMAGE_URL }}
+          --build-arg LABEL_VCS_REF=`git rev-parse --short ${{ github.sha }}` \
+          --build-arg LABEL_VCS_URL=`git config --get remote.origin.url` \
+          --build-arg LABEL_VENDOR=$({{ github.repository_owner }}) \
+          --build-arg LABEL_VERSION=$({{ env.IMAGE_VERSION }}) 
+
+    - name: Log into registry
+      run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
+
+    - name: Push image
+      run: |
+        echo IMAGE_ID=${{ env.IMAGE_ID }}
+        echo VERSION=${{ env.IMAGE_VERSION }}
+
+        docker tag $IMAGE_NAME ${{ env.IMAGE_ID }}:${{ env.IMAGE_VERSION }}
+        docker push ${{ env.IMAGE_ID }}:${{ env.IMAGE_VERSION }}
