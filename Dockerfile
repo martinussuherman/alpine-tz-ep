@@ -1,4 +1,4 @@
-FROM alpine:3.12
+FROM jeanblanchard/alpine-glibc:3.12
 
 ENV \
     # container/su-exec UID \
