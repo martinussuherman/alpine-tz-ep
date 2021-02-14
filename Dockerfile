@@ -9,6 +9,8 @@ ENV \
     EUSER=docker-user \
     # container/su-exec group name \
     EGROUP=docker-group \
+    # should user shell set to nologin? (yes/no) \
+    ENOLOGIN=yes \
     # container user home dir \
     EHOME= \
     # should user home dir get chown'ed? (yes/no) \
