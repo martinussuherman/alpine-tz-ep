@@ -4,6 +4,8 @@
 
 ---
 
+## Important: this repository will receive no more update and will be archived, new development goes to: https://github.com/martinussuherman/alpine
+
 ## What is this image for ?
 
 This is an [Alpine Linux](https://hub.docker.com/_/alpine/) or [Minimal Alpine Linux image with glibc](https://hub.docker.com/r/jeanblanchard/alpine-glibc) based image that bundles **tzdata**, **su-exec**, and some useful entrypoint scripts.
