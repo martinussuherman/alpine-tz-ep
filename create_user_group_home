@@ -28,7 +28,7 @@ if [ ! -z $EXISTING_UID ]; then
          else
             # change login, home, and primary group of the existing user
             usermod -s /bin/sh -u $EUID -g $EGROUP -d $EHOME $EUSER
-         if
+         fi
       else
          if [ $ENOLOGIN = "yes" ]; then 
             # change login, shell (nologin) and primary group of the existing user
