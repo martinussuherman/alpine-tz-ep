@@ -22,21 +22,42 @@ EXISTING_UID=$( getent passwd $EUSER | cut -f3 -d ':' )
 if [ ! -z $EXISTING_UID ]; then
    if [ $EXISTING_UID != $EUID ]; then
       if [ ! -z $EHOME ]; then
-         # change login, home, shell (nologin) and primary group of the existing user
-         usermod -u $EUID -d $EHOME -s /sbin/nologin -g $EGROUP $EUSER
+         if [ $ENOLOGIN = "yes" ]; then 
+            # change login, home, shell (nologin) and primary group of the existing user
+            usermod -s /sbin/nologin -u $EUID -g $EGROUP -d $EHOME $EUSER
+         else
+            # change login, home, and primary group of the existing user
+            usermod -s /bin/sh -u $EUID -g $EGROUP -d $EHOME $EUSER
+         if
       else
-         # change login, shell (nologin) and primary group of the existing user
-         usermod -u $EUID -s /sbin/nologin -g $EGROUP $EUSER
+         if [ $ENOLOGIN = "yes" ]; then 
+            # change login, shell (nologin) and primary group of the existing user
+            usermod -s /sbin/nologin -u $EUID -g $EGROUP $EUSER
+         else
+            # change login and primary group of the existing user
+            usermod -s /bin/sh -u $EUID -g $EGROUP $EUSER
+         fi
       fi
    fi
 else
    if [ ! -z $EHOME ]; then
-      # create new user with id = EUID, group = EGROUP and home directory = EHOME,
-      # with nologin shell
-      adduser -s /sbin/nologin -u $EUID -G $EGROUP -h $EHOME -D $EUSER
+      if [ $ENOLOGIN = "yes" ]; then 
+         # create new user with id = EUID, group = EGROUP and home directory = EHOME,
+         # with nologin shell
+         adduser -s /sbin/nologin -u $EUID -G $EGROUP -h $EHOME -D $EUSER
+      else
+         # create new user with id = EUID, group = EGROUP and home directory = EHOME,
+         # with default shell
+         adduser -s /bin/sh -u $EUID -G $EGROUP -h $EHOME -D $EUSER
+      fi
    else
-      # create new user with id = EUID and group = EGROUP, with nologin shell
-      adduser -s /sbin/nologin -u $EUID -G $EGROUP -D $EUSER
+      if [ $ENOLOGIN = "yes" ]; then 
+         # create new user with id = EUID and group = EGROUP, with nologin shell
+         adduser -s /sbin/nologin -u $EUID -G $EGROUP -D $EUSER
+      else
+         # create new user with id = EUID and group = EGROUP, with default shell
+         adduser -s /bin/sh -u $EUID -G $EGROUP -D $EUSER
+      fi
    fi
 fi
 
